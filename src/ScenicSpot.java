@@ -1,8 +1,13 @@
-public class ScenicSpot {
+import java.util.Set;
+import java.util.TreeSet;
+
+class ScenicSpot {
     private String name;
     private long id;
     private int bh;
     private String introduction;
+    private Set<Long>pointadjoin=new TreeSet<>();
+
     ScenicSpot()
     {
         name="";
@@ -16,7 +21,18 @@ public class ScenicSpot {
         this.name=name;
         this.bh=bh;
     }
-
+    void addEdgeTo(long toid)
+    {
+        if(!pointadjoin.contains(toid)) pointadjoin.add(toid);
+    }
+    void delEdgeTo(long toid)
+    {
+        if(pointadjoin.contains(toid)) pointadjoin.remove(toid);
+    }
+    Set getPointadjoin()
+    {
+        return pointadjoin;
+    }
     int getBh() {
         return bh;
     }

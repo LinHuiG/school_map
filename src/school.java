@@ -51,7 +51,12 @@ public class school {
         String key=ida+"_"+idb;
         Edge e=new Edge(ida,idb,lenth);
 
-        if(getScenicSpotEdge(ida,idb)>lenth) ScenicSpotEdges.put(key,e);
+        if(getScenicSpotEdge(ida,idb)>lenth)
+        {
+            ScenicSpotEdges.put(key,e);
+            ((ScenicSpot)ScenicSpots.get(ida)).addEdgeTo(idb);
+            ((ScenicSpot)ScenicSpots.get(idb)).addEdgeTo(ida);
+        }
     }
     public double getScenicSpotEdge(long ida,long idb)
     {
@@ -78,16 +83,21 @@ public class school {
     }
     public void delScenicSpot(long id)
     {
+        if(!ScenicSpots.containsKey(id))
+        {
+            System.out.println("无此点\n");
+            return;
+        }
         int thisbh=idTobh(id);
         isdel.add(thisbh);
         delpoints.add(thisbh);
-        ScenicSpots.remove(id);
-        Iterator iterator = ScenicSpots.entrySet().iterator();
-        while(iterator.hasNext()){
-            Map.Entry entry = (Map.Entry)iterator.next();
-            long keyid = (long)entry.getKey();
-            delScenicSpotEdge(keyid,id);
+        Set<Long> set=new TreeSet<>();
+        set.addAll(((ScenicSpot)ScenicSpots.get(id)).getPointadjoin());
+        for (Object str : set) {
+            long idto = (long)str;
+            delScenicSpotEdge(idto,id);
         }
+        ScenicSpots.remove(id);
     }
     public void delScenicSpotEdge(long ida,long idb)
     {
@@ -98,13 +108,21 @@ public class school {
             idb=t;
         }
         String key=ida+"_"+idb;
-        if(ScenicSpotEdges.containsKey(key))ScenicSpotEdges.remove(key);
+        if(ScenicSpotEdges.containsKey(key))
+        {
+            ScenicSpotEdges.remove(key);
+            ((ScenicSpot)ScenicSpots.get(ida)).delEdgeTo(idb);
+            ((ScenicSpot)ScenicSpots.get(idb)).delEdgeTo(ida);
+        }
+        else {
+            System.out.println("无此边\n");
+        }
     }
     public String getIntroduction(long id)
     {
         return ((ScenicSpot) ScenicSpots.get(id)).getIntroduction();
     }
-    public StringBuffer  pf(int bg,int i, int[] hs,StringBuffer sb)
+    public StringBuffer  getRoad(int bg,int i, int[] hs,StringBuffer sb)
     {
         String s=((ScenicSpot)ScenicSpots.get(bhToid(i))).getName();
         if (i == bg) {
@@ -112,14 +130,15 @@ public class school {
             sb.append(""+s);
         }
         else{
-            pf(bg,hs[i], hs, sb);
+            getRoad(bg,hs[i], hs, sb);
             sb.append("->" + s);
         }
         return sb;
     }
     public String getRoadBetween(long ida , long idb)
     {
-
+        if(!ScenicSpots.containsKey(ida))return "没有"+ida+"点";
+        if(!ScenicSpots.containsKey(idb))return "没有"+idb+"点";
         int vertex=points;
         int initial_point = idTobh(ida);//起始点
         int end_point=idTobh(idb);
@@ -155,10 +174,9 @@ public class school {
                 }
             }
         }
-
         StringBuffer sb = new StringBuffer();
         if(dis[end_point]>=Double.MAX_VALUE-1)return "无路可走";
-        for(int i=1;i<=vertex;i++)System.out.println(hs[i]);
-        return pf(initial_point,end_point,hs,sb)+"="+dis[end_point];
+        //for(int i=1;i<=vertex;i++)System.out.println(hs[i]);
+        return getRoad(initial_point,end_point,hs,sb)+"="+dis[end_point];
     }
 }

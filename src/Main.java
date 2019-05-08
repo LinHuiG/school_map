@@ -3,8 +3,6 @@ import java.util.Scanner;
 public class Main {
 
     public static void main(String[] args) {
-
-        System.out.println("Hello World!");
         school s=new school();
         int xz;
         Scanner cin=new Scanner(System.in);
@@ -16,7 +14,8 @@ public class Main {
                     "3:查询路径\n" +
                     "4:删边\n" +
                     "5:删点\n" +
-                    "6:查信息\n" );
+                    "6:查信息\n" +
+                    "7:查编号\n" );
             xz=cin.nextInt();
             if(xz==1)
             {
@@ -59,6 +58,12 @@ public class Main {
                 System.out.println("输入id");
                 long x=cin.nextLong();
                 System.out.println(s.getIntroduction(x));
+            }
+            else if(xz==7)
+            {
+                System.out.println("输入id");
+                long x=cin.nextLong();
+                System.out.println(s.idTobh(x));
             }
         }
     }
