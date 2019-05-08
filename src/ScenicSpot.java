@@ -1,18 +1,15 @@
-import java.util.HashMap;
-import java.util.Map;
-
 public class ScenicSpot {
     private String name;
     private long id;
     private int bh;
     private String introduction;
-    public  ScenicSpot()
+    ScenicSpot()
     {
         name="";
         id=0;
         introduction="";
     }
-    public  ScenicSpot(String name,long id,String introduction,int bh)
+    ScenicSpot(String name,long id,String introduction,int bh)
     {
         this.introduction=introduction;
         this.id=id;
@@ -20,26 +17,26 @@ public class ScenicSpot {
         this.bh=bh;
     }
 
-    public int getBh() {
+    int getBh() {
         return bh;
     }
 
-    public String getName() {
+    String getName() {
         return name;
     }
-    public  long getId()
+    long getId()
     {
         return id;
     }
-    public String getIntroduction()
+    String getIntroduction()
     {
         return introduction;
     }
-    public void setName(String name)
+    void setName(String name)
     {
         this.name=name;
     }
-    public void setIntroduction(String introduction) {
+    void setIntroduction(String introduction) {
         this.introduction = introduction;
     }
 }

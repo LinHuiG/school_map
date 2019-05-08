@@ -1,11 +1,17 @@
-public class Edge {
+ class Edge {
     private long idx,idy;
     private double lenth;
 
-    public double getLenth() {
+     double getLenth() {
         return lenth;
     }
-    public Edge(long idx,long idy,double lenth)
+    long getIdx(){
+         return idx;
+    }
+    long getIdy(){
+         return idy;
+    }
+     Edge(long idx,long idy,double lenth)
     {
         this.lenth=lenth;
         this.idx=idx;

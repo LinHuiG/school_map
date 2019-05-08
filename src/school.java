@@ -3,14 +3,14 @@ import java.util.*;
 public class school {
     Map ScenicSpots=new HashMap();
     Map ScenicSpotEdges=new HashMap();
-    int brim=0;
+    Map bh_id=new HashMap();
     int points=0;
-    long [] bh_id=new long[1000006];
-    Queue<Integer>delpoints=new  LinkedList<Integer>();
+    Queue<Integer> delpoints=new LinkedList<Integer>();
     Set<Integer>isdel=new TreeSet<>();
     long bhToid(int bh)
     {
-        return bh_id[bh];
+        if(!bh_id.containsKey(bh))return -1;
+        return (long)bh_id.get(bh);
     }
     int idTobh(long id)
     {
@@ -35,7 +35,7 @@ public class school {
             bh=delpoints.poll();
             isdel.remove(bh);
         }
-        bh_id[bh]=id;
+        bh_id.put(bh,id);
         ScenicSpot scenicSpot=new ScenicSpot(name,id,introduction,bh);
         ScenicSpots.put(id,scenicSpot);
         System.out.println("添加成功");
