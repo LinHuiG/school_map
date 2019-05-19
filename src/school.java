@@ -75,6 +75,11 @@ public class school implements Serializable {
             System.out.println("无"+idb+"点\n");
             return;
         }
+        if(ida==idb)
+        {
+            System.out.println("请输入不同点的id");
+            return;
+        }
         if(lenth<=0)
         {
             System.out.println("路径不能为负数");
@@ -162,7 +167,8 @@ public class school implements Serializable {
     }
     public String getIntroduction(long id)
     {
-        return ((ScenicSpot) ScenicSpots.get(id)).getIntroduction();
+        ScenicSpot sc=(ScenicSpot) ScenicSpots.get(id);
+        return "name:"+sc.getName()+"\nintroduction:"+sc.getIntroduction();
     }
     public StringBuffer  getRoad(int bg,int i, int[] hs,StringBuffer sb)
     {
