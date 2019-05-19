@@ -91,8 +91,7 @@ public class Main {
             }
             else if(xz==7)
             {
-                s.save(s);
-                System.out.println("保存成功");
+                s.save();
                 break;
             }
         }

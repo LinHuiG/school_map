@@ -6,14 +6,14 @@ public class school implements Serializable {
     Map ScenicSpotEdges=new HashMap();
     Map bh_id=new HashMap();
     int points=0;
-    String init_dir="map_init.bin";
+    String init_dir="data/map_init.bin";
     Queue<Integer> delpoints=new LinkedList<Integer>();
     Set<Integer>isdel=new TreeSet<>();
-    public school()  {
+    public school()
+    {
         try
         {
             File aFile=new File(init_dir);
-
             FileInputStream fileInputStream=new FileInputStream(aFile);
             ObjectInputStream objectInputStream=new ObjectInputStream(fileInputStream);
             school sc=(school) objectInputStream.readObject();
@@ -23,10 +23,11 @@ public class school implements Serializable {
             this.points=sc.points;
             this.delpoints=sc.delpoints;
             this.isdel=sc.isdel;
+            System.out.println("初始化成功");
         }
         catch (Exception e)
         {
-            e.printStackTrace();
+            System.out.println("初始化失败，未找到数据文件");
         }
     }
     long bhToid(int bh)
@@ -60,10 +61,25 @@ public class school implements Serializable {
         bh_id.put(bh,id);
         ScenicSpot scenicSpot=new ScenicSpot(name,id,introduction,bh);
         ScenicSpots.put(id,scenicSpot);
-        System.out.println("添加成功");
+        System.out.println("点添加成功");
     }
     public void addScenicSpotEdge(long ida,long idb,double lenth)
     {
+        if(!(ScenicSpots.containsKey(ida)))
+        {
+            System.out.println("无"+ida+"点\n");
+            return;
+        }
+        if(!(ScenicSpots.containsKey(idb)))
+        {
+            System.out.println("无"+idb+"点\n");
+            return;
+        }
+        if(lenth<=0)
+        {
+            System.out.println("路径不能为负数");
+            return;
+        }
         if(ida>idb)
         {
             long t=ida;
@@ -78,7 +94,10 @@ public class school implements Serializable {
             ScenicSpotEdges.put(key,e);
             ((ScenicSpot)ScenicSpots.get(ida)).addEdgeTo(idb);
             ((ScenicSpot)ScenicSpots.get(idb)).addEdgeTo(ida);
+            System.out.println("边添加成功");
+            return;
         }
+        System.out.println("边添加失败，已有更短边");
     }
     public double getScenicSpotEdge(long ida,long idb)
     {
@@ -96,7 +115,6 @@ public class school implements Serializable {
         Edge e=(Edge)ScenicSpotEdges.get(key) ;
         return e.getLenth();
     }
-
     public double getScenicSpotEdge(int bha,int bhb)
     {
         long ida=bhToid(bha);
@@ -120,6 +138,7 @@ public class school implements Serializable {
             delScenicSpotEdge(idto,id);
         }
         ScenicSpots.remove(id);
+        System.out.println("点删除成功");
     }
     public void delScenicSpotEdge(long ida,long idb)
     {
@@ -135,6 +154,7 @@ public class school implements Serializable {
             ScenicSpotEdges.remove(key);
             ((ScenicSpot)ScenicSpots.get(ida)).delEdgeTo(idb);
             ((ScenicSpot)ScenicSpots.get(idb)).delEdgeTo(ida);
+            System.out.println("边删除成功");
         }
         else {
             System.out.println("无此边\n");
@@ -202,22 +222,25 @@ public class school implements Serializable {
         //for(int i=1;i<=vertex;i++)System.out.println(hs[i]);
         return getRoad(initial_point,end_point,hs,sb)+"="+dis[end_point];
     }
-    public void save(school sc)
+    public void save()
     {
         File aFile=new File(init_dir);
         FileOutputStream fileOutputStream=null;
         try {
             fileOutputStream = new FileOutputStream(aFile);
             ObjectOutputStream objectOutputStream=new ObjectOutputStream(fileOutputStream);
-            objectOutputStream.writeObject(sc);
+            objectOutputStream.writeObject(this);
             objectOutputStream.flush();
             objectOutputStream.close();
+            System.out.println("保存成功");
         } catch (FileNotFoundException e) {
             // TODO Auto-generated catch block
+            System.out.println("保存失败，FileNotFoundException");
             e.printStackTrace();
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
+            System.out.println("保存失败，IOException");
         }finally {
             if(fileOutputStream!=null)
             {
