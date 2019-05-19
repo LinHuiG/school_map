@@ -1,4 +1,6 @@
- class Edge {
+import java.io.Serializable;
+
+class Edge implements Serializable {
     private long idx,idy;
     private double lenth;
 

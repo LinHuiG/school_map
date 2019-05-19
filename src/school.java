@@ -1,12 +1,34 @@
+import java.io.*;
 import java.util.*;
 
-public class school {
+public class school implements Serializable {
     Map ScenicSpots=new HashMap();
     Map ScenicSpotEdges=new HashMap();
     Map bh_id=new HashMap();
     int points=0;
+    String init_dir="map_init.bin";
     Queue<Integer> delpoints=new LinkedList<Integer>();
     Set<Integer>isdel=new TreeSet<>();
+    public school()  {
+        try
+        {
+            File aFile=new File(init_dir);
+
+            FileInputStream fileInputStream=new FileInputStream(aFile);
+            ObjectInputStream objectInputStream=new ObjectInputStream(fileInputStream);
+            school sc=(school) objectInputStream.readObject();
+            this.ScenicSpots=sc.ScenicSpots;
+            this.ScenicSpotEdges=sc.ScenicSpotEdges;
+            this.bh_id=sc.bh_id;
+            this.points=sc.points;
+            this.delpoints=sc.delpoints;
+            this.isdel=sc.isdel;
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
     long bhToid(int bh)
     {
         if(!bh_id.containsKey(bh))return -1;
@@ -173,10 +195,39 @@ public class school {
                     flag[i] = getScenicSpotEdge(index,i) + dis[index];
                 }
             }
+
         }
         StringBuffer sb = new StringBuffer();
         if(dis[end_point]>=Double.MAX_VALUE-1)return "无路可走";
         //for(int i=1;i<=vertex;i++)System.out.println(hs[i]);
         return getRoad(initial_point,end_point,hs,sb)+"="+dis[end_point];
+    }
+    public void save(school sc)
+    {
+        File aFile=new File(init_dir);
+        FileOutputStream fileOutputStream=null;
+        try {
+            fileOutputStream = new FileOutputStream(aFile);
+            ObjectOutputStream objectOutputStream=new ObjectOutputStream(fileOutputStream);
+            objectOutputStream.writeObject(sc);
+            objectOutputStream.flush();
+            objectOutputStream.close();
+        } catch (FileNotFoundException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }finally {
+            if(fileOutputStream!=null)
+            {
+                try {
+                    fileOutputStream.close();
+                } catch (IOException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 }

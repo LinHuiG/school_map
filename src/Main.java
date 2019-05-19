@@ -1,9 +1,38 @@
+import java.io.*;
 import java.util.Scanner;
 
 public class Main {
-
+    public static school s;
+    public static void save()
+    {
+        File aFile=new File("map_init.bin");
+        FileOutputStream fileOutputStream=null;
+        try {
+            fileOutputStream = new FileOutputStream(aFile);
+            ObjectOutputStream objectOutputStream=new ObjectOutputStream(fileOutputStream);
+            objectOutputStream.writeObject(s);
+            objectOutputStream.flush();
+            objectOutputStream.close();
+        } catch (FileNotFoundException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }finally {
+            if(fileOutputStream!=null)
+            {
+                try {
+                    fileOutputStream.close();
+                } catch (IOException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
     public static void main(String[] args) {
-        school s=new school();
+        s=new school();
         int xz;
         Scanner cin=new Scanner(System.in);
         while (true)
@@ -14,8 +43,9 @@ public class Main {
                     "3:查询路径\n" +
                     "4:删边\n" +
                     "5:删点\n" +
-                    "6:查信息\n" +
-                    "7:查编号\n" );
+                    "6:查信息\n"+
+                     "7:退出\n"
+                    );
             xz=cin.nextInt();
             if(xz==1)
             {
@@ -61,9 +91,9 @@ public class Main {
             }
             else if(xz==7)
             {
-                System.out.println("输入id");
-                long x=cin.nextLong();
-                System.out.println(s.idTobh(x));
+                s.save(s);
+                System.out.println("保存成功");
+                break;
             }
         }
     }

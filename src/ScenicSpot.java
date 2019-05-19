@@ -1,7 +1,8 @@
+import java.io.Serializable;
 import java.util.Set;
 import java.util.TreeSet;
 
-class ScenicSpot {
+class ScenicSpot implements Serializable {
     private String name;
     private long id;
     private int bh;
