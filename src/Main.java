@@ -3,34 +3,6 @@ import java.util.Scanner;
 
 public class Main {
     public static school s;
-    public static void save()
-    {
-        File aFile=new File("map_init.bin");
-        FileOutputStream fileOutputStream=null;
-        try {
-            fileOutputStream = new FileOutputStream(aFile);
-            ObjectOutputStream objectOutputStream=new ObjectOutputStream(fileOutputStream);
-            objectOutputStream.writeObject(s);
-            objectOutputStream.flush();
-            objectOutputStream.close();
-        } catch (FileNotFoundException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }finally {
-            if(fileOutputStream!=null)
-            {
-                try {
-                    fileOutputStream.close();
-                } catch (IOException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                }
-            }
-        }
-    }
     public static void main(String[] args) {
         s=new school();
         int xz;
@@ -38,7 +10,7 @@ public class Main {
         while (true)
         {
             System.out.println(
-                    "1:加点\n" +
+                    "\n1:加点\n" +
                     "2:加边\n" +
                     "3:查询路径\n" +
                     "4:删边\n" +
@@ -49,10 +21,12 @@ public class Main {
             xz=cin.nextInt();
             if(xz==1)
             {
+                cin.nextLine();
                 System.out.println("输入name，id，introduction");
-                String name=cin.next();
+                String name=cin.nextLine();
                 long id=cin.nextLong();
-                String introduction=cin.next();
+                cin.nextLine();
+                String introduction=cin.nextLine();
                 s.addScenicSpot(name,id,introduction);
             }
             else if(xz==2)

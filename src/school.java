@@ -6,14 +6,15 @@ public class school implements Serializable {
     Map ScenicSpotEdges=new HashMap();
     Map bh_id=new HashMap();
     int points=0;
-    String init_dir="data/map_init.bin";
+    String init_path="data";
+    String init_dir="map_init.bin";
     Queue<Integer> delpoints=new LinkedList<Integer>();
     Set<Integer>isdel=new TreeSet<>();
     public school()
     {
         try
         {
-            File aFile=new File(init_dir);
+            File aFile=new File(init_path+"/"+init_dir);
             FileInputStream fileInputStream=new FileInputStream(aFile);
             ObjectInputStream objectInputStream=new ObjectInputStream(fileInputStream);
             school sc=(school) objectInputStream.readObject();
@@ -167,6 +168,10 @@ public class school implements Serializable {
     }
     public String getIntroduction(long id)
     {
+        if(!ScenicSpots.containsKey(id))
+        {
+            return "查无此点\n";
+        }
         ScenicSpot sc=(ScenicSpot) ScenicSpots.get(id);
         return "name:"+sc.getName()+"\nintroduction:"+sc.getIntroduction();
     }
@@ -191,34 +196,35 @@ public class school implements Serializable {
         int initial_point = idTobh(ida);//起始点
         int end_point=idTobh(idb);
         double[] dis = new double[vertex + 1];
-        double[] flag = new double[vertex + 1];//标记不参与找最小值的点
+        boolean [] flag = new boolean[vertex + 1];//标记不参与找最小值的点
         int[] hs = new int[vertex + 1];//回溯找上一个节点
+        Queue<Edge> minpoint = new PriorityQueue<>(vertex);
+
         for (int i = 1; i <= vertex; i++) {
             dis[i] = getScenicSpotEdge(initial_point,i);//初始化起始点到这些顶点的距离
-            flag[i] = getScenicSpotEdge(initial_point,i);
+            flag[i] = false;
             hs[i] = initial_point;//每一个节点的上一个节点都是起始点;
+            if(dis[i]<Double.MAX_VALUE-1) minpoint.add(new Edge(i,dis[i]));
         }
-        List list = new ArrayList();
         dis[initial_point] = 0;
-        flag[initial_point] = Double.MAX_VALUE;
-        list.add(initial_point);
-        while (list.size() != vertex) {
-            double min = Double.MAX_VALUE;
-            int index = initial_point;
-            for (int i = 1; i <= vertex; i++) {
-                if (flag[i] <= min) {
-                    min = flag[i];
-                    index = i;
-                }
+        flag[initial_point] = true;//已经查过
+        while (!minpoint.isEmpty()) {
+            Edge t=minpoint.poll();
+            int index = t.getBh();
+            while (flag[index]&&!minpoint.isEmpty())
+            {
+                t=minpoint.poll();
+                index = t.getBh();
             }
-            list.add(index);
-            flag[index] = Double.MAX_VALUE;
+
+            if(index==end_point)break;//优化，找到终点直接输出
+            flag[index] = true;
             //寻找index节点出度,如果通过到这些出度的点的值小于直达的点，则更新里面的值。
             for (int i = 1; i <= vertex; i++) {
-                if (dis[index] + getScenicSpotEdge(index,i) <= dis[i]) {
+                if (!flag[i]&&dis[index] + getScenicSpotEdge(index,i) <= dis[i]) {
                     hs[i] = index;
                     dis[i] = getScenicSpotEdge(index,i) + dis[index];
-                    flag[i] = getScenicSpotEdge(index,i) + dis[index];
+                    minpoint.add(new Edge(i,dis[i]));
                 }
             }
 
@@ -230,10 +236,16 @@ public class school implements Serializable {
     }
     public void save()
     {
-        File aFile=new File(init_dir);
+        File Filepath=new File(init_path);
         FileOutputStream fileOutputStream=null;
         try {
-            fileOutputStream = new FileOutputStream(aFile);
+            if (!Filepath.exists())
+            {
+                System.out.println(111);
+                Filepath.mkdir();
+            }
+            File initFile=new File(init_path+"/"+init_dir);
+            fileOutputStream = new FileOutputStream(initFile);
             ObjectOutputStream objectOutputStream=new ObjectOutputStream(fileOutputStream);
             objectOutputStream.writeObject(this);
             objectOutputStream.flush();
