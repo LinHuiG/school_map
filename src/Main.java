@@ -16,7 +16,8 @@ public class Main {
                     "4:删边\n" +
                     "5:删点\n" +
                     "6:查信息\n"+
-                     "7:退出\n"
+                    "7:更新点信息\n"+
+                    "8:退出\n"
                     );
             xz=cin.nextInt();
             if(xz==1)
@@ -64,6 +65,16 @@ public class Main {
                 System.out.println(s.getIntroduction(x));
             }
             else if(xz==7)
+            {
+                System.out.println("输入id");
+                long id=cin.nextLong();
+                cin.nextLine();
+                System.out.println("输入name，introduction");
+                String name=cin.nextLine();
+                String introduction=cin.nextLine();
+                s.updateScenicSpot(name,id,introduction);
+            }
+            else if (xz==8)
             {
                 s.save();
                 break;
